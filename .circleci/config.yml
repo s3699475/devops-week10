@@ -99,6 +99,39 @@ jobs:
           command: |
             kubectl exec deployment/tech-test-app -n test -- ./TechTestApp updatedb -s
 
+  deploy-prod:
+    docker:
+      - image: cimg/base:2020.01
+    environment:
+      ENV: prod
+    steps:
+      - attach_workspace:
+          at: ./
+          
+      - setup-cd
+          
+      - run:
+          name: deploy infra
+          command: |
+            cd artifacts/infra
+            make init
+            make up
+            terraform output endpoint > ../dbendpoint.txt
+          
+      - run:
+          name: deploy app
+          command: |
+            helm upgrade techtestapp artifacts/techtestapp.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/dbendpoint.txt)
+          
+      - run:
+          name: upgrade database
+          command: |
+            kubectl exec deployment/tech-test-app -n prod -- ./TechTestApp updatedb -s
+
+  
+
+            
+
 workflows:
   version: 2
   pipeline:
@@ -107,3 +140,6 @@ workflows:
       - deploy-test:
           requires:
             - build
+      - deploy-prod:
+          requires:
+            - deploy-test
