@@ -140,6 +140,10 @@ workflows:
       - deploy-test:
           requires:
             - build
+      - approval:
+          type: approval
+          requires:
+            - deploy-test
       - deploy-prod:
           requires:
             - deploy-test
