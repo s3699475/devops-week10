@@ -27,7 +27,7 @@ jobs:
   build:
     machine: true
     environment:
-      ECR: 724066712853.dkr.ecr.us-east-1.amazonaws.com
+      ECR: 479378369399.dkr.ecr.us-east-1.amazonaws.com/app
       reponame: app
     steps:
       - checkout
