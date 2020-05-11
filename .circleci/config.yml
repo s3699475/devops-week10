@@ -94,6 +94,11 @@ jobs:
           command: |
             helm upgrade techtestapp artifacts/techtestapp.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/dbendpoint.txt)
 
+      - run:
+          name: upgrade database
+          command: |
+            kubectl exec deployment/tech-test-app -n test -- ./TechTestApp updatedb -s
+
 workflows:
   version: 2
   pipeline:
