@@ -75,3 +75,6 @@ workflows:
   pipeline:
     jobs:
       - build
+      - deploy-test:
+          requires:
+            - build
