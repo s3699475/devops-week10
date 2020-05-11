@@ -146,4 +146,4 @@ workflows:
             - deploy-test
       - deploy-prod:
           requires:
-            - deploy-test
+            - approval
